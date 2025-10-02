@@ -22,6 +22,9 @@ struct ReviewNode {
 	ReviewNode* next;
 };
 
+void addNodeToFront(ReviewNode*& head, float newRating, const string& newComment);
+void addNodeToTail(ReviewNode*& head, float newRating, const string& newComment);
+
 int main() {
 	ReviewNode* head = nullptr;
 	int modeChoice;
@@ -41,30 +44,69 @@ int main() {
 		}
 	} while (modeChoice != 1 && modeChoice != 2);
 
-	// Prompt the user for a rating
+	// Continuously add new ratings until the user doesn't want to anymore
 	do {
-		cout << "Enter review rating 0-5: ";
-		cin >> rating;
-		if (rating < 0 || rating > 5) {
-			cout << "ERROR: Please enter a rating between 0 and 5. Try again\n";
+		// Prompt the user for a rating
+		do {
+			cout << "Enter review rating 0-5: ";
+			cin >> rating;
+			if (rating < 0 || rating > 5) {
+				cout << "ERROR: Please enter a rating between 0 and 5. Try again\n";
+			}
+		} while (rating < 0 || rating > 5);
+		cin.ignore();
+
+		// Prompt the user for a comment
+		cout << "Enter review comments: ";
+		getline(cin, comment);
+
+		// Add a node for the review
+		if (modeChoice == 1) {
+			addNodeToFront(head, rating, comment);
 		}
-	} while (rating < 0 || rating > 5);
-	cin.ignore();
+		else {
+			addNodeToTail(head, rating, comment);
+		}
 
-	// Prompt the user for a comment
-	cout << "Enter review comments: ";
-	getline(cin, comment);
+		// Ask the user if they want to enter another review
+		do {
+			cout << "Enter another review? Y/N: ";
+			cin >> reviewChoice;
+			reviewChoice = tolower(reviewChoice);
+			if (reviewChoice != 'y' && reviewChoice != 'n') {
+				cout << "ERROR: Please enter Y or N. Try again.\n";
+			}
+		} while (reviewChoice != 'y' && reviewChoice != 'n');
+	} while (reviewChoice == 'y');
 
-	// Add a node for the review
-	if (modeChoice == 1) {
-		// Add node to front
+}
+
+void addNodeToFront(ReviewNode*& head, float newRating, const string& newComment) {
+	// Create a new node and make it the head of the linked list
+	ReviewNode* newNode = new ReviewNode;
+	newNode->rating = newRating;
+	newNode->comment = newComment;
+	newNode->next = head;
+	head = newNode;
+}
+
+void addNodeToTail(ReviewNode*& head, float newRating, const string& newComment) {
+	// Create a new node
+	ReviewNode* newNode = new ReviewNode;
+	newNode->rating = newRating;
+	newNode->comment = newComment;
+	newNode->next = nullptr;
+
+	// Set the new node as the head if the linked list is empty
+	if (!head) {
+		head = newNode;
+		return;
 	}
-	else {
-		// Add node to tail
-	}
-	
-	// Ask the user if they want to enter another review
-	cout << "Enter another review? Y/N: ";
-	cin >> reviewChoice;
 
+	// If it's not empty, traverse the linked list tot he tail and add the node there
+	ReviewNode* current = head;
+	while (current->next != nullptr) {
+		current = current->next;
+	}
+	current->next = newNode;
 }
