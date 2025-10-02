@@ -13,6 +13,8 @@ After all reviews have been input, traverse the linked list to output the data a
 
 #include <iostream>
 #include <string>
+#include <cctype>
+#include <iomanip>
 
 using namespace std;
 
@@ -24,6 +26,8 @@ struct ReviewNode {
 
 void addNodeToFront(ReviewNode*& head, float newRating, const string& newComment);
 void addNodeToTail(ReviewNode*& head, float newRating, const string& newComment);
+// TODO: add a function to delete the linked list
+void outputReviewsAndAvg(ReviewNode*& head);
 
 int main() {
 	ReviewNode* head = nullptr;
@@ -79,6 +83,9 @@ int main() {
 		} while (reviewChoice != 'y' && reviewChoice != 'n');
 	} while (reviewChoice == 'y');
 
+	// Display the reviews and average
+	outputReviewsAndAvg(head);
+
 }
 
 void addNodeToFront(ReviewNode*& head, float newRating, const string& newComment) {
@@ -109,4 +116,38 @@ void addNodeToTail(ReviewNode*& head, float newRating, const string& newComment)
 		current = current->next;
 	}
 	current->next = newNode;
+}
+
+void outputReviewsAndAvg(ReviewNode*& head) {
+	ReviewNode* current = head;
+	double totalRating = 0.0;
+	int numReviews = 0;
+	double avgRating;
+	const int RATING_PRECISION = 1;		// Used for setprecision()
+	const int AVG_PRECISION = 5;		// Used for setprecision()
+
+	if (!head) {
+		cout << "The list of reviews is empty.\n";
+		return;
+	}
+
+	cout << "Outputting all reviews:\n";
+
+	// Traverse the linked list
+	while (current) {
+		// Output review
+		++numReviews;
+		cout << fixed << setprecision(RATING_PRECISION);
+		cout << "\t> Review #" << numReviews << ": " << current->rating << ": " << current->comment << "\n";
+	
+		// Accumulate ratings
+		totalRating += current->rating;
+
+		current = current->next;
+	}
+
+	// Calculate and output the ratings' average
+	avgRating = totalRating / numReviews;
+	cout << fixed << setprecision(AVG_PRECISION);
+	cout << "\t> Average: " << avgRating << "\n";
 }
