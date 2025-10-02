@@ -24,9 +24,12 @@ struct ReviewNode {
 	ReviewNode* next;
 };
 
+// Functions for linked list operations
 void addNodeToFront(ReviewNode*& head, float newRating, const string& newComment);
 void addNodeToTail(ReviewNode*& head, float newRating, const string& newComment);
-// TODO: add a function to delete the linked list
+void deleteLinkedList(ReviewNode*& head);
+
+// Function for outputting all the reviews and their calculated average
 void outputReviewsAndAvg(ReviewNode*& head);
 
 int main() {
@@ -48,7 +51,7 @@ int main() {
 		}
 	} while (modeChoice != 1 && modeChoice != 2);
 
-	// Continuously add new ratings until the user doesn't want to anymore
+	// Continuously add new ratings to the linked list until the user doesn't want to anymore
 	do {
 		// Prompt the user for a rating
 		do {
@@ -81,11 +84,16 @@ int main() {
 				cout << "ERROR: Please enter Y or N. Try again.\n";
 			}
 		} while (reviewChoice != 'y' && reviewChoice != 'n');
+
 	} while (reviewChoice == 'y');
 
 	// Display the reviews and average
 	outputReviewsAndAvg(head);
 
+	// Deallocate memory
+	deleteLinkedList(head);
+
+	return 0;
 }
 
 void addNodeToFront(ReviewNode*& head, float newRating, const string& newComment) {
@@ -118,6 +126,19 @@ void addNodeToTail(ReviewNode*& head, float newRating, const string& newComment)
 	current->next = newNode;
 }
 
+void deleteLinkedList(ReviewNode*& head) {
+	ReviewNode* current = head;
+	while (current) {
+		head = current->next;
+		delete current;
+		current = head;
+	}
+	head = nullptr;
+}
+
+// outputReviewsAndAvg() takes a linked list of ReviewNodes and outputs all of its reviews and the calculated average of the reviews.
+// args: head - a pointer to the linked list's head
+// returns: void
 void outputReviewsAndAvg(ReviewNode*& head) {
 	ReviewNode* current = head;
 	double totalRating = 0.0;
