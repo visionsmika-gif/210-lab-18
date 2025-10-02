@@ -48,7 +48,7 @@ int main() {
 			cout << "Enter review rating 0-5: ";
 			cin >> rating;
 			if (rating < 0 || rating > 5) {
-				cout << "ERROR: Please enter a rating between 0 and 5. Try again\n";
+				cout << "ERROR: Please enter a rating between 0 and 5. Try again.\n";
 			}
 		} while (rating < 0 || rating > 5);
 		cin.ignore();
